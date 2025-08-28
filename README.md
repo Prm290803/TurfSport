@@ -26,15 +26,8 @@ TurfSpot is a comprehensive turf booking application with three modules: Admin, 
 
 ---
 
-## 🌐 URLs
-
-- **User App**: [https://turf-spot.vercel.app/](https://turf-spot.vercel.app/)
-- **Owner/Admin App**: [https://turf-spot-ao.vercel.app/](https://turf-spot-ao.vercel.app/)
-
 ### 🔐 Admin Credentials (For Demo)
 
-- **Email**: `admin@gmail.com`  
-- **Password**: `rijo.com`
 
 > 🛠️ **Note**: Admin accounts are created directly in the database. The admin process involves adding an owner manually in the `owners` table and updating their `role` to `admin`.
 
@@ -49,13 +42,6 @@ TurfSpot is a comprehensive turf booking application with three modules: Admin, 
 - **Image Hosting**: Cloudinary
 
 
-
-## Installation
-
-1. Clone the repository
-   ```bash
-   git clone https://github.com/RijoKsd/TurfSpot.git
-   ```
 2. Install dependencies for both client and server
    ```bash
    cd TurfSpot
@@ -89,7 +75,6 @@ TurfSpot is a comprehensive turf booking application with three modules: Admin, 
     JWT_SECRET = your_jwt_secret
 
 
-   ```
 
 4. Run the application
 
@@ -107,13 +92,6 @@ TurfSpot is a comprehensive turf booking application with three modules: Admin, 
    npm run dev
    ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Create a new Pull Request
 
 ## License
 
@@ -121,5 +99,5 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any inquiries or questions, please contact us at [rijobdk@gmail.com](mailto:rijobdk@gmail.com).
+For any inquiries or questions, please contact me at [paramchoksi4@gmail.com].
 
