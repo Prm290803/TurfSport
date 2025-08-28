@@ -37,7 +37,7 @@ const GuestNavbar = () => {
             alt="TurfSpot"
             className="h-10 w-10 mask mask-squircle"
           />
-          TurfSpot
+          BOOK'N'PLAY
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
