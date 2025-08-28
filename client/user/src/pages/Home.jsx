@@ -23,10 +23,10 @@ const Home = () => {
             <Carousel slides={slides} />
           </div>
           <div className="w-full lg:w-1/2 animate-zoom-in">
-            <h1 className="text-5xl font-bold ">Welcome to TurfSpot</h1>
+            <h1 className="text-5xl font-bold ">Welcome to BOOK'N'PLAY</h1>
             <p className="py-6">
               Discover and book the best turf fields in your area. Whether
-              you&#39;re planning a casual game or a tournament, TurfSpot has
+              you&#39;re planning a casual game or a tournament, BOOK'N'PLAY has
               got you covered.
             </p>
             <Link

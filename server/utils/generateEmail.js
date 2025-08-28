@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import chalk from "chalk";
 
 export default async function generateEmail(to, subject, html) {
+    email = process.env.EMAIL
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -12,7 +13,7 @@ export default async function generateEmail(to, subject, html) {
     });
 
     const mailOptions = {
-      from: process.env.EMAIL,
+      from: email,
       to: to,
       subject: subject,
       html: html,

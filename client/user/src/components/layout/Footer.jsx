@@ -10,7 +10,7 @@ const Footer = () => {
           rel="noopener noreferrer"
           className="text-blue-500 hover:underline"
         >
-          Param Choksi
+          Param Choksi | Harshil Patel
         </a>
       </p>
     </footer>

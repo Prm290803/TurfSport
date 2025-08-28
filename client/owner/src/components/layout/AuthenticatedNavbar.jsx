@@ -8,29 +8,50 @@ const AuthenticatedNavbar = ({ toggleSidebar }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const role = useSelector((state) => state?.auth?.role);
- const path = role === "admin" ? "/admin" : "/owner";
+
+  const path = role === "admin" ? "/admin" : "/owner";
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/", { replace: true });
   };
+
   return (
-    <div className="navbar bg-base-100 fixed top-0 z-50 shadow-md">
-      <div className="navbar-start">
-        <button className="btn btn-ghost lg:hidden" onClick={toggleSidebar}>
+    <div className="navbar bg-base-100 fixed top-0 z-50 shadow-md px-4">
+      {/* Left Section */}
+      <div className="navbar-start flex items-center gap-2">
+        {/* Sidebar Toggle Button (mobile only) */}
+        <button
+          className="btn btn-ghost lg:hidden"
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
           <Menu size={24} />
         </button>
-        <Link to={path} className="btn btn-ghost normal-case text-xl max-sm:p-0">
+
+        {/* Logo + Brand Name */}
+        <Link
+          to={path}
+          className="btn btn-ghost normal-case text-xl flex items-center gap-2 max-sm:p-0"
+        >
           <img
             src="/logo.png"
             alt="TurfSpot"
-            className="h-10 w-10 mask mask-squircle"
+            className="h-10 w-10 mask mask-squircle hidden sm:block"
           />
-          BOOK'N'PLAY
+          <span className="text-base md:text-lg lg:text-xl font-bold">
+            BOOK'N'PLAY
+          </span>
         </Link>
       </div>
-      <div className="navbar-end">
+
+      {/* Right Section */}
+      <div className="navbar-end flex items-center gap-2">
         <ThemeSwitcher />
-        <button className="btn btn-primary btn-outline" onClick={handleLogout}>
+        <button
+          className="btn btn-primary btn-outline sm:btn-sm"
+          onClick={handleLogout}
+        >
           Logout
         </button>
       </div>
