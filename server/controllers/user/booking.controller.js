@@ -5,9 +5,7 @@ import Booking from "../../models/booking.model.js";
 import TimeSlot from "../../models/timeSlot.model.js";
 import generateQRCode from "../../utils/generateQRCode.js";
 import Turf from "../../models/turf.model.js";
-import generateEmail, {
-  generateHTMLContent,
-} from "../../utils/generateEmail.js";
+import generateEmail, { generateHTMLContent,} from "../../utils/generateEmail.js";
 import User from "../../models/user.model.js";
 import { format, parseISO } from "date-fns";
 
