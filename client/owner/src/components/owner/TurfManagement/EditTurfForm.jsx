@@ -12,7 +12,7 @@ const EditTurfForm = ({ turf, onSave, onCancel, turfId }) => {
    pricePerHour: Yup.number()
      .required("Price per Hour is required")
      .positive("Price per Hour must be a positive number")
-     .min(500, "Price per Hour must be greater than 500")
+     .min(200, "Price per Hour must be greater than 200")
      .max(10000, "Price per Hour must be less than 10000"),
    location: Yup.string().required("Location is required"),
     openTime: Yup.date().required("Open Time is required"),
