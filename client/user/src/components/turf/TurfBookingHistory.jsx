@@ -53,14 +53,14 @@ const TurfBookingHistory = () => {
                     {booking.totalPrice}
                   </p>
                 </div>
-                <div className="flex flex-col justify-center items-center">
+                {/* <div className="flex flex-col justify-center items-center">
                   <img
                     src={booking.qrCode}
                     alt="Booking QR Code"
                     className="w-32 h-32 mb-2"
                   />
                   <p className="text-sm text-gray-500">Scan for details</p>
-                </div>
+                </div> */}
               </div>
               <button
                 className="btn btn-primary mt-4"
