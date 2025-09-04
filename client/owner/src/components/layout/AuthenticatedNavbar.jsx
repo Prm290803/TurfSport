@@ -36,7 +36,7 @@ const AuthenticatedNavbar = ({ toggleSidebar }) => {
         >
           <img
             src="/logo.png"
-            alt="TurfSpot"
+            alt="BOOK'N'PLAY"
             className="h-10 w-10 mask mask-squircle hidden sm:block"
           />
           <span className="text-base md:text-lg lg:text-xl font-bold">
