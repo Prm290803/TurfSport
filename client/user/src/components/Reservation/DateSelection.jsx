@@ -1,64 +1,33 @@
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
-// import { format, addDays, isSameDay } from "date-fns";
-
-// const DateSelection = ({ selectedDate, handleDateChange }) => {
-//   return (
-//     <div className="flex flex-col space-y-4 mb-6">
-//       <div className="w-full">
-//         <label className="label">
-//           <span className="label-text">Select Date</span>
-//         </label>
-//         <DatePicker
-//           selected={selectedDate}
-//           onChange={handleDateChange}
-//           dateFormat="dd-MM-yyyy"
-//           minDate={new Date()}
-//           className="input input-bordered w-full"
-//         />
-//       </div>
-//       <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
-//         <button
-//           className="btn btn-outline btn-sm w-full sm:w-auto"
-//           onClick={() => handleDateChange(addDays(selectedDate, -1))}
-//           disabled={isSameDay(selectedDate, new Date())}
-//         >
-//           PREV DATE
-//         </button>
-//         <div className="badge badge-primary text-lg p-4">
-//           {format(selectedDate, "dd-MM-yyyy")}
-//         </div>
-//         <button
-//           className="btn btn-outline btn-sm w-full sm:w-auto"
-//           onClick={() => handleDateChange(addDays(selectedDate, 1))}
-//         >
-//           NEXT DATE
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DateSelection;
-
-import { format, addDays, isSameDay, startOfWeek, eachDayOfInterval, isToday } from "date-fns";
+import { format, addDays, isSameDay, startOfWeek, eachDayOfInterval, isToday, isBefore, endOfDay, isAfter } from "date-fns";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const DateSelection = ({ selectedDate, handleDateChange }) => {
   const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date()));
-
+  
+  // Calculate the maximum selectable date (15 days from today)
+  const maxSelectableDate = addDays(new Date(), 15);
+  
+  // Always show all 7 days of the week, but disable past dates and dates beyond 15 days
   const weekDays = eachDayOfInterval({
     start: startOfWeek(currentWeek),
     end: addDays(startOfWeek(currentWeek), 6)
   });
 
   const nextWeek = () => {
-    setCurrentWeek(addDays(currentWeek, 7));
+    const nextWeekDate = addDays(currentWeek, 7);
+    // Only allow navigation if the next week contains selectable dates
+    if (!isAfter(startOfWeek(nextWeekDate), maxSelectableDate)) {
+      setCurrentWeek(nextWeekDate);
+    }
   };
 
   const prevWeek = () => {
-    setCurrentWeek(addDays(currentWeek, -7));
+    const prevWeekDate = addDays(currentWeek, -7);
+    // Only allow navigation if the previous week contains today or future dates
+    if (!isBefore(endOfDay(addDays(prevWeekDate, 6)), new Date())) {
+      setCurrentWeek(prevWeekDate);
+    }
   };
 
   const isSelected = (date) => {
@@ -66,21 +35,40 @@ const DateSelection = ({ selectedDate, handleDateChange }) => {
   };
 
   const isDateDisabled = (date) => {
-    return date < new Date().setHours(0, 0, 0, 0);
+    // Disable dates before today and dates more than 15 days in the future
+    return isBefore(endOfDay(date), new Date()) || isAfter(date, maxSelectableDate);
+  };
+
+  // Check if next week button should be disabled
+  const isNextWeekDisabled = () => {
+    const nextWeekStart = addDays(currentWeek, 7);
+    return isAfter(startOfWeek(nextWeekStart), maxSelectableDate);
+  };
+
+  // Check if previous week button should be disabled
+  const isPrevWeekDisabled = () => {
+    const prevWeekStart = addDays(currentWeek, -7);
+    return isBefore(endOfDay(addDays(prevWeekStart, 6)), new Date());
   };
 
   return (
     <div className="mb-8">
-      <div className="flex items-center mb-4">
-        <Calendar className="w-5 h-5 text-green-400 mr-2" />
-        <h3 className="text-lg font-semibold">Select Date</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Calendar className="w-5 h-5 text-green-400 mr-2" />
+          <h3 className="text-lg font-semibold">Select Date</h3>
+        </div>
+        <div className="text-sm text-gray-400">
+          Available until {format(maxSelectableDate, "MMM dd")}
+        </div>
       </div>
       
       {/* Week Navigation */}
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={prevWeek}
-          className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+          disabled={isPrevWeekDisabled()}
+          className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -91,13 +79,14 @@ const DateSelection = ({ selectedDate, handleDateChange }) => {
         
         <button
           onClick={nextWeek}
-          className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+          disabled={isNextWeekDisabled()}
+          className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Day Headers */}
+      {/* Day Headers - Always show 7 days */}
       <div className="grid grid-cols-7 gap-2 mb-2">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
           <div key={day} className="text-center text-sm text-gray-400 py-2">
@@ -106,31 +95,40 @@ const DateSelection = ({ selectedDate, handleDateChange }) => {
         ))}
       </div>
 
-      {/* Date Grid */}
+      {/* Date Grid - Show all 7 days but disable unavailable ones */}
       <div className="grid grid-cols-7 gap-2 mb-4">
-        {weekDays.map((date) => (
-          <button
-            key={date.toString()}
-            onClick={() => !isDateDisabled(date) && handleDateChange(date)}
-            disabled={isDateDisabled(date)}
-            className={`p-3 rounded-xl text-center transition-all duration-200 relative ${
-              isSelected(date)
-                ? "bg-green-500 text-white shadow-lg"
-                : isDateDisabled(date)
-                ? "bg-gray-800 text-gray-600 cursor-not-allowed opacity-50"
-                : isToday(date)
-                ? "bg-blue-500/20 text-blue-300 border border-blue-400"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
-            }`}
-          >
-            <div className="text-sm font-medium">
-              {format(date, "d")}
-            </div>
-            {isToday(date) && (
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full"></div>
-            )}
-          </button>
-        ))}
+        {weekDays.map((date) => {
+          const disabled = isDateDisabled(date);
+          const selected = isSelected(date);
+          const today = isToday(date);
+          
+          return (
+            <button
+              key={date.toString()}
+              onClick={() => !disabled && handleDateChange(date)}
+              disabled={disabled}
+              className={`p-3 rounded-xl text-center transition-all duration-200 relative ${
+                selected
+                  ? "bg-green-500 text-white shadow-lg"
+                  : disabled
+                  ? "bg-gray-800 text-gray-600 cursor-not-allowed opacity-50"
+                  : today
+                  ? "bg-blue-500/20 text-blue-300 border border-blue-400"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
+              }`}
+            >
+              <div className="text-sm font-medium">
+                {format(date, "d")}
+              </div>
+              {today && (
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full"></div>
+              )}
+              {isAfter(date, maxSelectableDate) && (
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-400 rounded-full"></div>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* Selected Date Display */}
@@ -143,19 +141,43 @@ const DateSelection = ({ selectedDate, handleDateChange }) => {
       <div className="flex gap-2 mt-4">
         <button
           onClick={() => handleDateChange(new Date())}
-          className="flex-1 bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-xl text-sm transition-colors"
+          className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
+            isToday(selectedDate) 
+              ? "bg-green-500 text-white" 
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
         >
           Today
         </button>
         <button
-          onClick={() => handleDateChange(addDays(new Date(), 1))}
-          className="flex-1 bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-xl text-sm transition-colors"
+          onClick={() => {
+            const tomorrow = addDays(new Date(), 1);
+            if (!isDateDisabled(tomorrow)) {
+              handleDateChange(tomorrow);
+            }
+          }}
+          disabled={isDateDisabled(addDays(new Date(), 1))}
+          className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
+            isSameDay(selectedDate, addDays(new Date(), 1))
+              ? "bg-green-500 text-white" 
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          }`}
         >
           Tomorrow
         </button>
         <button
-          onClick={() => handleDateChange(addDays(new Date(), 7))}
-          className="flex-1 bg-gray-800 text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-xl text-sm transition-colors"
+          onClick={() => {
+            const nextWeek = addDays(new Date(), 7);
+            if (!isDateDisabled(nextWeek)) {
+              handleDateChange(nextWeek);
+            }
+          }}
+          disabled={isDateDisabled(addDays(new Date(), 7))}
+          className={`flex-1 px-3 py-2 rounded-xl text-sm transition-colors ${
+            isSameDay(selectedDate, addDays(new Date(), 7))
+              ? "bg-green-500 text-white" 
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          }`}
         >
           Next Week
         </button>

@@ -1,10 +1,17 @@
 import FormField from "../../components/common/FormField";
 import Button from "../../components/common/Button";
 import useBecomeOwner from "../../hooks/useBecomeOwner";
+import { useEffect } from "react";
 
 const BecomeOwner = () => {
   const { register, handleSubmit, errors, onSubmit, loading } =
     useBecomeOwner();
+
+    useEffect(() => {
+        window.screenTop = 0;
+        window.screenY = 0;
+        window.scrollTo(0, 0);
+      }, []);
     
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8">

@@ -4,8 +4,16 @@ import DurationSelection from "./DurationSelection";
 import ReservationSummary from "./ReservationSummary";
 import useReservation from "../../hooks/useReservation";
 import ReservationSkeleton from "../ui/ReservationSkeleton";
+import {useEffect} from "react";
+
 
 const Reservation = () => {
+
+  useEffect(() => {
+    window.screenTop = 0;
+    window.screenY = 0;
+    window.scrollTo(0, 0);
+  }, []);
   const {
     selectedDate,
     selectedStartTime,
@@ -48,6 +56,7 @@ const Reservation = () => {
                 isTimeSlotBooked={isTimeSlotBooked}
                 timeSlots={timeSlots}
                 duration={duration}
+                selectedDate={selectedDate} // Pass the selected date here
               />
               
               {selectedStartTime && (

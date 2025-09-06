@@ -1,5 +1,10 @@
-
+import React, { useEffect } from "react";
 const TurfBookingHistorySkeleton = () => {
+  useEffect(() => {
+      window.screenTop = 0;
+      window.screenY = 0;
+      window.scrollTo(0, 0);
+    }, []);
   return (
     <div className="container mx-auto p-4 bg-base-200 animate-pulse">
       <div className="h-8 bg-base-300 rounded w-3/4 mx-auto mb-8  "></div>
