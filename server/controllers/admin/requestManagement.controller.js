@@ -27,43 +27,94 @@ export const getAllRequestedOwners = async (req, res) => {
 };
 
 // approve the pending owner request by id
+
+// export const approveOwnerRequest = async (req, res) => {
+//   const admin = req.admin.role;
+//   const { id } = req.params;
+//   if (admin !== "admin") {
+//     return res
+//       .status(403)
+//       .json({ success: false, message: "Unauthorized access denied" });
+//   }
+//   try {
+//     const ownerRequest = await OwnerRequest.findById(id);
+//     if (!ownerRequest) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Owner request not found" });
+//     }
+//     ownerRequest.status = "approved";
+//     await ownerRequest.save();
+//     const to = ownerRequest.email;
+//     const subject = "Your request has been approved";
+//     const html = ` 
+//     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+//         <h1 style="color: #4CAF50;">Your request to become an owner has been approved</h1>
+//         <p>Congratulations! You can now create your account by clicking the button below:</p>
+//         <button style="background-color: #4CAF50; border: none; padding: 10px 20px; text-align: center; display: inline-block; margin: 10px 0; cursor: pointer; border-radius: 5px;">
+//             <a href="${process.env.OWNER_URL}" style="color: white; text-decoration: none; font-size: 16px;">Create your account</a>
+//         </button>
+//     </div>
+// `;
+//     await generateEmail(to, subject, html);
+//     return res
+//       .status(200)
+//       .json({ success: true, message: "Owner request approved" });
+//   } catch (err) {
+//     console.log(chalk.red("Error in approveOwnerRequest: ", err));
+//     return res.status(500).json({ message: "error", data: err });
+//   }
+// };
+
+
 export const approveOwnerRequest = async (req, res) => {
-  const admin = req.admin.role;
+  const admin = req.admin?.role;
   const { id } = req.params;
+
   if (admin !== "admin") {
-    return res
-      .status(403)
-      .json({ success: false, message: "Unauthorized access denied" });
+    return res.status(403).json({ success: false, message: "Unauthorized access denied" });
   }
+
   try {
     const ownerRequest = await OwnerRequest.findById(id);
     if (!ownerRequest) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Owner request not found" });
+      return res.status(404).json({ success: false, message: "Owner request not found" });
     }
+
     ownerRequest.status = "approved";
     await ownerRequest.save();
-    const to = ownerRequest.email;
-    const subject = "Your request has been approved";
-    const html = ` 
-    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h1 style="color: #4CAF50;">Your request to become an owner has been approved</h1>
-        <p>Congratulations! You can now create your account by clicking the button below:</p>
-        <button style="background-color: #4CAF50; border: none; padding: 10px 20px; text-align: center; display: inline-block; margin: 10px 0; cursor: pointer; border-radius: 5px;">
-            <a href="${process.env.OWNER_URL}" style="color: white; text-decoration: none; font-size: 16px;">Create your account</a>
-        </button>
-    </div>
-`;
-    await generateEmail(to, subject, html);
-    return res
-      .status(200)
-      .json({ success: true, message: "Owner request approved" });
+
+    // ✅ Try sending email but don’t block response
+    try {
+        const to = ownerRequest.email;
+      if (!to) {
+        console.error("🔥 Email not found for owner request ID:", id);
+        return res.status(400).json({ success: false, message: "Owner email is missing." });
+      }
+      const subject = "Your request has been approved";
+      const html = `
+        <div>
+          <h1>Your request to become an owner has been approved</h1>
+          <p>Click the link below to register:</p>
+          <a href="${process.env.OWNER_URL}" target="_blank">Register Here</a>
+        </div>
+      `;
+
+      await generateEmail(to, subject, html);
+      console.log("📧 Email sent successfully to:", to);
+    } catch (emailErr) {
+      console.error("🔥 Email sending failed:", emailErr.message);
+    }
+
+    return res.status(200).json({ success: true, message: "Owner request approved" });
   } catch (err) {
-    console.log(chalk.red("Error in approveOwnerRequest: ", err));
-    return res.status(500).json({ message: "error", data: err });
+    console.error("🔥 Error in approveOwnerRequest:", err);
+    return res.status(500).json({ success: false, message: "Internal server error", error: err.message });
   }
 };
+
+
+
 
 // reject the pending owner request
 export const deleteOwnerRequest = async (req, res) => {
@@ -83,7 +134,11 @@ export const deleteOwnerRequest = async (req, res) => {
     }
     ownerRequest.status = "rejected";
     await ownerRequest.save();
-    const to = ownerRequest.email;
+     const to = ownerRequest.email;
+            if (!to) {
+              console.error("🔥 Email not found for owner request ID:", id);
+              return res.status(400).json({ success: false, message: "Owner email is missing." });
+            }
     const subject = "Your request has been rejected";
     const html = ` 
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -122,6 +177,10 @@ export const reconsiderOwnerRequest = async (req, res) =>{
     ownerRequest.status = "pending";
     await ownerRequest.save();
     const to = ownerRequest.email;
+      if (!to) {
+        console.error("🔥 Email not found for owner request ID:", id);
+        return res.status(400).json({ success: false, message: "Owner email is missing." });
+      }
     const subject = "Your request has been reconsidered";
     const html = ` 
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">

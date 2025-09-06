@@ -98,13 +98,11 @@ export default function AuthNavbar() {
               <button onClick={handleLogout} className="text-error">
                 Logout
               </button>
-            </li>  <li></li>
+            </li> 
           </ul>
         </div>
         
-        <div className="lg:hidden ml-2">
-        {/* <ThemeSwitcher /> */}
-        </div>
+  
       </div>
     </div>
   );

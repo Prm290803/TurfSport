@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
-import ThemeSwitcher from "../common/ThemeSwitcher.jsx";
+// import ThemeSwitcher from "../common/ThemeSwitcher.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@redux/slices/authSlice.js";
 
@@ -31,7 +31,7 @@ const AuthenticatedNavbar = ({ toggleSidebar }) => {
 
         {/* Logo + Brand Name */}
         <Link
-          to={path}
+          to={"/"}
           className="btn btn-ghost normal-case text-xl flex items-center gap-2 max-sm:p-0"
         >
           <img
@@ -47,7 +47,7 @@ const AuthenticatedNavbar = ({ toggleSidebar }) => {
 
       {/* Right Section */}
       <div className="navbar-end flex items-center gap-2">
-        <ThemeSwitcher />
+        
         <button
           className="btn btn-primary btn-outline sm:btn-sm"
           onClick={handleLogout}

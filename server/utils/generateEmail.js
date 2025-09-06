@@ -2,25 +2,28 @@ import nodemailer from "nodemailer";
 import chalk from "chalk";
 
 export default async function generateEmail(to, subject, html) {
-    email = process.env.EMAIL
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
+        user: process.env.EMAIL,     // your Gmail or SMTP user
+        pass: process.env.PASSWORD,  // app password (not your normal Gmail password!)
       },
     });
 
     const mailOptions = {
-      from: email,
-      to: to,
-      subject: subject,
-      html: html,
+      from: process.env.EMAIL,
+      to,
+      subject,
+      html,
     };
-    await transporter.sendMail(mailOptions);
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(chalk.greenBright(`📧 Email sent successfully to ${to}: ${info.response}`));
+    return info;
   } catch (e) {
-    console.log(chalk.redBright.bold("Error in generateEmail"), e);
+    console.log(chalk.redBright.bold("🔥 Error in generateEmail:"), e.message);
+    throw e; // important so your controller knows email failed
   }
 }
 
