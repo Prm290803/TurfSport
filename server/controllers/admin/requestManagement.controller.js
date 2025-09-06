@@ -95,8 +95,8 @@ export const approveOwnerRequest = async (req, res) => {
       const html = `
         <div>
           <h1>Your request to become an owner has been approved</h1>
-          <p>Click the link below to register:</p>
-          <a href="${process.env.OWNER_URL}" target="_blank">Register Here</a>
+          <p>Click the link below to register:  <a href="${process.env.OWNER_URL}" target="_blank">Register Here</a></p>
+         
         </div>
       `;
 
