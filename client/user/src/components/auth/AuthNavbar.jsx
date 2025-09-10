@@ -13,7 +13,7 @@ export default function AuthNavbar() {
   };
 
   return (
-    <div className="navbar bg-base-100 fixed top-0 z-50 shadow-md">
+    <div className="navbar bg-base-300 fixed top-0 z-50 shadow-md">
       <div className="navbar-start">
         <Link to="/auth" className="btn btn-ghost normal-case text-xl">
           <img
@@ -49,7 +49,6 @@ export default function AuthNavbar() {
       
       <div className="navbar-end">
         <div className="hidden lg:flex items-center gap-2">
-          {/* <ThemeSwitcher /> */}
           <button className="btn btn-ghost" onClick={handleLogout}>
             Logout
           </button>
@@ -74,7 +73,7 @@ export default function AuthNavbar() {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-300 rounded-box w-52"
           >
             <li>
               <Link to="/auth">Home</Link>
@@ -101,8 +100,6 @@ export default function AuthNavbar() {
             </li> 
           </ul>
         </div>
-        
-  
       </div>
     </div>
   );

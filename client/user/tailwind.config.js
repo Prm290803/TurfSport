@@ -18,7 +18,7 @@ export default {
   },
   plugins: [daisyui, animations],
   daisyui: {
-    themes: ["light", "dark"],
+    themes: ["dark"],
     darkTheme: "dark",
     base: true,
     styled: true,

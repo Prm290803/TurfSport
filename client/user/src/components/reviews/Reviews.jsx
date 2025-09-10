@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import useReviews from "../../hooks/useReviews";
 import { format } from "date-fns";
 import ReviewSkeleton from "../ui/ReviewSkeleton";
@@ -20,44 +20,40 @@ const Reviews = ({ turfId }) => {
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Reviews</h2>
       {reviews.length === 0 ? (
-        <p>No reviews yet.</p>
+        <p className="text-gray-500">No reviews yet.</p>
       ) : (
         <>
           <div className="space-y-4">
             {reviews.slice(0, displayCount).map((review) => (
-              <div key={review._id} className="card bg-base-100 shadow-xl">
-                <div className="card-body">
-                  <div className="flex items-center justify-between">
-                    <div className="font-semibold">
-                      {review.user.name || "Anonymous"}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {format(new Date(review.createdAt), "MMM d, yyyy")}
-                    </div>
+              <div key={review._id} className="bg-gray-800 rounded-lg shadow-md p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="font-semibold">
+                    {review.user.name || "Anonymous"}
                   </div>
-                  <div className="rating rating-md">
-                    {[...Array(review.rating)].map((_, i) => (
-                      <input
-                        key={i}
-                        type="radio"
-                        name={`rating-${review._id}`}
-                        className="mask mask-star-2 bg-orange-400 cursor-auto"
-                        readOnly
-                        disabled
-                      />
-                    ))}
+                  <div className="text-sm text-gray-500">
+                    {format(new Date(review.createdAt), "MMM d, yyyy")}
                   </div>
-                  <p className="text-sm text-gray-500 break-all">
-                    {review.comment}
-                  </p>
                 </div>
+                <div className="flex mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <span
+                      key={i}
+                      className={`text-xl ${i < review.rating ? "text-yellow-400" : "text-gray-300"}`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <p className="text-gray-600 break-words">
+                  {review.comment}
+                </p>
               </div>
             ))}
           </div>
           {displayCount < reviews.length && (
             <div className="text-center mt-6">
               <button
-                className="btn btn-primary btn-outline"
+                className="inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-50 transition-colors"
                 onClick={handleLoadMore}
               >
                 Load More

@@ -91,7 +91,7 @@ export const approveOwnerRequest = async (req, res) => {
         console.error("🔥 Email not found for owner request ID:", id);
         return res.status(400).json({ success: false, message: "Owner email is missing." });
       }
-      const subject = "Your request has been approved";
+      const subject = "Congratulations🎉! Your request has been approved";
       const html = `
         <div>
           <h1>Your request to become an owner has been approved</h1>
